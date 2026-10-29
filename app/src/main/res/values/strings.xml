@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- נכתב: 2026-10-29 02:10 -->
+<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 -->
 <resources>
     <string name="app_name">בוט נהיגה</string>
-    <string name="tile_label">מצב נהיגה</string>
+    <string name="tile_label">מענה אוטומטי</string>
     <string name="default_message">אני בנהיגה 🚗 אם זה דחוף, נא להתקשר. אראה את ההודעה כשאעצור.</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- נכתב: 2026-10-29 21:00 (פלטת צבעים — מצב כהה) -->
+<resources>
+    <color name="brand">#FF00A884</color>
+    <color name="ok">#FF4CC17A</color>
+    <color name="warn">#FFFF6B5E</color>
+    <color name="card_off">#FF1F2C33</color>
+    <color name="text_main">#FFE9EDEF</color>
+    <color name="bubble">#FF005C4B</color>
+    <color name="bubble_text">#FFE9EDEF</color>
+    <color name="divider">#33FFFFFF</color>
+    <color name="update_bg">#FF3A3320</color>
+</resources>

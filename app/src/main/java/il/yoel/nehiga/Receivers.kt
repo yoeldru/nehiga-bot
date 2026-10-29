@@ -1,4 +1,4 @@
-// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35 (יומן)
+// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (גרסה 2: הודעה לפי מכשיר Bluetooth)
 package il.yoel.nehiga
 
 import android.bluetooth.BluetoothDevice
@@ -8,14 +8,12 @@ import android.content.Intent
 import android.os.Build
 
 /**
- * מדליק את מצב הנהיגה כשהטלפון מתחבר ל-Bluetooth של הרכב, ומכבה כשהוא מתנתק.
- * אפשר לכבות ידנית גם כשהרכב מחובר (עצירה ארוכה) — המצב יישאר כבוי עד החיבור הבא לרכב,
+ * חיבור למכשיר Bluetooth שהוגדר → מפעיל את ההודעה שנקבעה לו. ניתוק → מכבה.
+ * אפשר לכבות ידנית גם כשהמכשיר מחובר (עצירה ארוכה) — המצב יישאר כבוי עד החיבור הבא,
  * כי ההפעלה האוטומטית קורית רק ברגע החיבור.
  */
 class BluetoothReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val car = Prefs.carAddress(context) ?: return
-
         val device: BluetoothDevice? = if (Build.VERSION.SDK_INT >= 33) {
             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
         } else {
@@ -27,16 +25,19 @@ class BluetoothReceiver : BroadcastReceiver() {
         } catch (_: SecurityException) {
             null
         } ?: return
-        if (!address.equals(car, ignoreCase = true)) return
+
+        val rule = Prefs.rules(context).firstOrNull { it.address.equals(address, ignoreCase = true) } ?: return
 
         when (intent.action) {
             BluetoothDevice.ACTION_ACL_CONNECTED -> {
-                EventLog.add(context, "🔵 הטלפון התחבר לרכב")
-                DrivingMode.set(context, true, DrivingMode.SRC_CAR)
+                EventLog.add(context, "🔵 התחבר: ${rule.device}")
+                DrivingMode.set(context, true, DrivingMode.srcBt(rule.device), rule.msgId, address)
             }
             BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
-                EventLog.add(context, "⚪ הטלפון התנתק מהרכב")
-                if (Prefs.isActive(context)) DrivingMode.set(context, false, DrivingMode.SRC_CAR)
+                EventLog.add(context, "⚪ התנתק: ${rule.device}")
+                if (Prefs.isActive(context) && Prefs.activeBt(context).equals(address, ignoreCase = true)) {
+                    DrivingMode.set(context, false, DrivingMode.srcBt(rule.device))
+                }
             }
         }
     }

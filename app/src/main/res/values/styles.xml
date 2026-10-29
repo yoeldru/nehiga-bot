@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- נכתב: 2026-10-29 02:10 -->
+<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (ערכת עיצוב Material 3) -->
 <resources>
+    <style name="Theme.Nehiga" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorOnPrimary">#FFFFFFFF</item>
+        <item name="colorSecondary">@color/brand</item>
+        <item name="colorPrimaryContainer">@color/bubble</item>
+        <item name="colorOnPrimaryContainer">@color/bubble_text</item>
+    </style>
+
     <style name="SectionTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">24dp</item>
-        <item name="android:layout_marginBottom">6dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginTop">28dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">19sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/brand</item>
+    </style>
+
+    <style name="Hint">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:alpha">0.7</item>
     </style>
 </resources>

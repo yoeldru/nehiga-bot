@@ -1,5 +1,6 @@
-# נכתב: 2026-10-29 02:15
-# בונה את האפליקציה בכל פעם שמעלים שינוי, ומפרסם קובץ APK להורדה ישירה מהטלפון
+# נכתב: 2026-10-29 02:15 | עודכן: 2026-10-29 21:00 (מספר גרסה אוטומטי + הערות גרסה)
+# בונה את האפליקציה בכל פעם שמעלים שינוי, ומפרסם קובץ APK להורדה.
+# האפליקציה עצמה בודקת כאן אם יש גרסה חדשה (releases/latest).
 name: Build APK
 
 on:
@@ -25,8 +26,13 @@ jobs:
         with:
           gradle-version: "8.10.2"
 
+      - name: Version
+        run: |
+          echo "VC=$((100 + ${{ github.run_number }}))" >> $GITHUB_ENV
+          echo "VN=2.0.${{ github.run_number }}" >> $GITHUB_ENV
+
       - name: Build
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon -PvCode=$VC -PvName=$VN
 
       - name: Rename APK
         run: cp app/build/outputs/apk/debug/app-debug.apk nehiga.apk
@@ -34,7 +40,8 @@ jobs:
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: build-${{ github.run_number }}
-          name: בוט נהיגה — גרסה ${{ github.run_number }}
+          tag_name: v${{ env.VC }}
+          name: בוט נהיגה ${{ env.VN }}
+          body: ${{ github.event.head_commit.message }}
           files: nehiga.apk
           make_latest: true

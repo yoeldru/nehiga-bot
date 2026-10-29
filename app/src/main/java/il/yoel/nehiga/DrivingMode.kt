@@ -1,4 +1,4 @@
-// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35 (יומן + מקור ההפעלה)
+// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (גרסה 2: בחירת הודעה, Bluetooth לפי מכשיר)
 package il.yoel.nehiga
 
 import android.app.NotificationChannel
@@ -11,31 +11,51 @@ import android.service.quicksettings.TileService
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-/** נקודה אחת שמדליקה ומכבה את מצב הנהיגה — מהאפליקציה, מהכפתור בווילון או מה-Bluetooth. */
+/** נקודה אחת שמדליקה, מכבה ומחליפה הודעה — מהאפליקציה, מהווילון או מה-Bluetooth. */
 object DrivingMode {
-    private const val CHANNEL_ID = "driving"
+    private const val CHANNEL_ID = "driving2"
+    private const val OLD_CHANNEL_ID = "driving"
     private const val NOTIF_ID = 1001
     const val ACTION_UPDATED = "il.yoel.nehiga.UPDATED"
 
-    // מקורות הפעלה/כיבוי (מוצגים ביומן)
-    const val SRC_APP = "מתג באפליקציה"
+    // מקורות הפעלה/כיבוי (מוצגים ביומן ובמסך)
+    const val SRC_APP = "מסך האפליקציה"
     const val SRC_TILE = "כפתור בווילון"
-    const val SRC_CAR = "Bluetooth של הרכב"
     const val SRC_NOTIF = "כפתור כבה בהתראה"
+    fun srcBt(device: String) = "Bluetooth: $device"
 
-    fun set(c: Context, on: Boolean, source: String) {
+    /**
+     * on=true: מפעיל (או מחליף) הודעה. msgId=null → ההודעה שנבחרה (✓).
+     * btAddress: אם ההפעלה הגיעה מ-Bluetooth — כדי לכבות כשדווקא הוא מתנתק.
+     */
+    fun set(c: Context, on: Boolean, source: String, msgId: String? = null, btAddress: String? = null) {
         val ctx = c.applicationContext
         val wasOn = Prefs.isActive(ctx)
-        if (on && !wasOn) {
-            // נסיעה חדשה — כולם יקבלו שוב תשובה פעם אחת
-            Prefs.clearReplied(ctx)
+        val oldId = Prefs.currentId(ctx)
+
+        if (on) {
+            val id = msgId ?: Prefs.selectedId(ctx)
+            // הפעלה חדשה או הודעה אחרת — כולם יקבלו שוב תשובה (פעם אחת)
+            if (!wasOn || id != oldId) Prefs.clearReplied(ctx)
+            Prefs.setCurrentId(ctx, id)
+            if (btAddress != null) Prefs.setActiveBt(ctx, btAddress)
+            else if (!wasOn) Prefs.setActiveBt(ctx, null)
+            if (!wasOn) Prefs.setActivationSource(ctx, source)
+            Prefs.setActive(ctx, true)
+
+            val name = Prefs.currentMessage(ctx).name
+            if (!wasOn) EventLog.add(ctx, "🟢 מענה אוטומטי הופעל: $name ($source)")
+            else if (id != oldId) EventLog.add(ctx, "🔄 הוחלפה הודעה: $name ($source)")
+            showOngoing(ctx)
+        } else {
+            if (wasOn) {
+                Prefs.setActive(ctx, false)
+                Prefs.setActivationSource(ctx, null)
+                Prefs.setActiveBt(ctx, null)
+                EventLog.add(ctx, "🔴 מענה אוטומטי כובה ($source)")
+            }
+            hideOngoing(ctx)
         }
-        Prefs.setActive(ctx, on)
-        Prefs.setActivationSource(ctx, if (on) source else null)
-        if (on != wasOn) {
-            EventLog.add(ctx, if (on) "🟢 מצב נהיגה הופעל ($source)" else "🔴 מצב נהיגה כובה ($source)")
-        }
-        if (on) showOngoing(ctx) else hideOngoing(ctx)
         refreshTile(ctx)
         notifyUi(ctx)
     }
@@ -44,9 +64,10 @@ object DrivingMode {
         c.sendBroadcast(Intent(ACTION_UPDATED).setPackage(c.packageName))
     }
 
-    /** מעדכן את טקסט ההתראה הקבועה (למשל אחרי שנשלחה תשובה). */
+    /** מעדכן את ההתראה הקבועה (אחרי תשובה, עריכה וכו'). */
     fun refreshOngoing(c: Context) {
         if (Prefs.isActive(c)) showOngoing(c.applicationContext)
+        refreshTile(c.applicationContext)
     }
 
     private fun refreshTile(c: Context) {
@@ -58,9 +79,11 @@ object DrivingMode {
 
     private fun ensureChannel(c: Context) {
         val nm = c.getSystemService(NotificationManager::class.java)
+        nm.deleteNotificationChannel(OLD_CHANNEL_ID)
         if (nm.getNotificationChannel(CHANNEL_ID) == null) {
             nm.createNotificationChannel(
-                NotificationChannel(CHANNEL_ID, "מצב נהיגה", NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(CHANNEL_ID, "מענה אוטומטי פעיל", NotificationManager.IMPORTANCE_LOW)
+                    .apply { setShowBadge(false) } // הנקודה על האייקון שמורה לעדכונים
             )
         }
     }
@@ -75,18 +98,18 @@ object DrivingMode {
             c, 1, Intent(c, StopReceiver::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val fromCar = Prefs.activationSource(c) == SRC_CAR
+        val fromBt = Prefs.activeBt(c) != null
         val count = Prefs.repliedNames(c).size
         val text = buildString {
-            append(if (fromCar) "הופעל אוטומטית מהרכב. " else "")
-            append(if (count == 0) "עונה אוטומטית בווטסאפ" else "נענו $count אנשים בנסיעה הזו")
+            Prefs.activationSource(c)?.let { append("הופעל דרך $it · ") }
+            append(if (count == 0) "עוד לא נשלחו תשובות" else "נענו $count אנשים")
         }
-        // כשהופעל מהרכב — הכיבוי תקף עד הנסיעה הבאה (ההפעלה הבאה תהיה בחיבור הבא לרכב)
-        val stopLabel = if (fromCar) "כבה עד הנסיעה הבאה" else "כבה"
+        // כשהופעל מ-Bluetooth — הכיבוי תקף עד החיבור הבא
+        val stopLabel = if (fromBt) "כבה עד החיבור הבא" else "כבה"
 
         val n = NotificationCompat.Builder(c, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_car)
-            .setContentTitle("🚗 מצב נהיגה פעיל")
+            .setContentTitle("🟢 מענה אוטומטי: ${Prefs.currentMessage(c).name}")
             .setContentText(text)
             .setOngoing(true)
             .setOnlyAlertOnce(true)

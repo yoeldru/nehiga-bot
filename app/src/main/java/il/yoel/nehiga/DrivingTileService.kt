@@ -1,10 +1,10 @@
-// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35
+// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (מציג את שם ההודעה הפעילה)
 package il.yoel.nehiga
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 
-/** הכפתור בווילון ההתראות: לחיצה אחת מדליקה/מכבה את מצב הנהיגה. */
+/** הכפתור בווילון ההתראות: לחיצה אחת מדליקה/מכבה, עם ההודעה שנבחרה (✓). */
 class DrivingTileService : TileService() {
 
     override fun onStartListening() {
@@ -23,7 +23,7 @@ class DrivingTileService : TileService() {
         val on = Prefs.isActive(this)
         tile.state = if (on) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         tile.label = getString(R.string.tile_label)
-        tile.subtitle = if (on) "פעיל" else "כבוי"
+        tile.subtitle = if (on) Prefs.currentMessage(this).name else "כבוי"
         tile.updateTile()
     }
 }

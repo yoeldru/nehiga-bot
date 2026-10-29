@@ -1,4 +1,4 @@
-// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35 (רישום ביומן כולל מספר טלפון)
+// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (שולח את ההודעה הפעילה מתוך כמה הודעות)
 package il.yoel.nehiga
 
 import android.app.Notification
@@ -80,9 +80,10 @@ class ReplyListenerService : NotificationListenerService() {
         if (Prefs.alreadyReplied(this, key)) return
         if (!Prefs.markReplied(this, key, title)) return
 
-        val ok = sendReply(replyAction, Prefs.message(this))
+        val msg = Prefs.currentMessage(this)
+        val ok = sendReply(replyAction, msg.text)
         if (ok) {
-            EventLog.add(this, "✉️ נשלחה תשובה אל $who" + if (isGroup) " (קבוצה)" else "")
+            EventLog.add(this, "✉️ נשלחה תשובה (${msg.name}) אל $who" + if (isGroup) " (קבוצה)" else "")
             DrivingMode.refreshOngoing(this)
             DrivingMode.notifyUi(this)
         } else {

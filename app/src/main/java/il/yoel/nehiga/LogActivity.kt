@@ -1,8 +1,6 @@
-// נכתב: 2026-10-29 02:35
+// נכתב: 2026-10-29 02:35 | עודכן: 2026-10-29 21:00 (עיצוב Material)
 package il.yoel.nehiga
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,9 +10,11 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /** מסך היומן: כל הפעולות, ניקוי ידני והגדרת ניקוי אוטומטי. */
-class LogActivity : Activity() {
+class LogActivity : AppCompatActivity() {
 
     private lateinit var txtLog: TextView
     private lateinit var txtCount: TextView
@@ -51,7 +51,7 @@ class LogActivity : Activity() {
         }
 
         findViewById<Button>(R.id.btnClear).setOnClickListener {
-            AlertDialog.Builder(this)
+            MaterialAlertDialogBuilder(this)
                 .setTitle("לנקות את היומן?")
                 .setMessage("כל הרשומות יימחקו.")
                 .setPositiveButton("נקה") { _, _ ->

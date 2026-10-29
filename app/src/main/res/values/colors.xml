@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- נכתב: 2026-10-29 02:10 -->
+<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (פלטת צבעים בהשראת ווטסאפ — מצב בהיר) -->
 <resources>
     <color name="brand">#FF128C7E</color>
+    <color name="ok">#FF1E8E3E</color>
+    <color name="warn">#FFD93025</color>
+    <color name="card_off">#FFEEF3F2</color>
+    <color name="text_main">#FF111B21</color>
+    <color name="bubble">#FFD9FDD3</color>
+    <color name="bubble_text">#FF111B21</color>
+    <color name="divider">#22000000</color>
+    <color name="update_bg">#FFFFF4D6</color>
 </resources>

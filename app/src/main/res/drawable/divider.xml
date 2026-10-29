@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- נכתב: 2026-10-29 21:00 — קו מפריד בין שורות ההגדרות -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <size android:height="1dp" />
+    <solid android:color="@color/divider" />
+</shape>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- נכתב: 2026-10-29 21:00 — כרטיס מכשיר Bluetooth וההודעה שמקושרת אליו -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/divider"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="🔵"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_main"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtRuleMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.75"
+                android:textColor="@color/text_main"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDelete"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="מחיקה"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/warn" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

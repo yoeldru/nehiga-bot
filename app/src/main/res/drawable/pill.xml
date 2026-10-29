@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- נכתב: 2026-10-29 21:00 — תגית "פעיל עכשיו" -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/brand" />
+    <corners android:radius="50dp" />
+</shape>

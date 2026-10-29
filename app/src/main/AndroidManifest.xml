@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35 (מסך יומן) -->
+<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (גרסה 2: עורך הודעות, עדכונים) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- זיהוי הרכב לפי Bluetooth -->
+    <!-- זיהוי מכשירי Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <!-- התראה קבועה "מצב נהיגה פעיל" -->
+    <!-- התראה קבועה + התראת עדכון -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- כדי שסמסונג לא "ירדים" את הבוט -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- בדיקה והורדה של עדכונים -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault.DayNight">
+        android:theme="@style/Theme.Nehiga">
 
         <activity
             android:name=".MainActivity"
@@ -25,6 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MessageEditActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".LogActivity"
@@ -57,7 +65,7 @@
                 android:value="true" />
         </service>
 
-        <!-- הפעלה/כיבוי אוטומטי כשהטלפון מתחבר/מתנתק מהרכב -->
+        <!-- הפעלה/כיבוי אוטומטי בחיבור/ניתוק Bluetooth -->
         <receiver
             android:name=".BluetoothReceiver"
             android:exported="true">
@@ -71,5 +79,16 @@
         <receiver
             android:name=".StopReceiver"
             android:exported="false" />
+
+        <!-- מאפשר למתקין של אנדרואיד לקרוא את קובץ העדכון שהורד -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>
