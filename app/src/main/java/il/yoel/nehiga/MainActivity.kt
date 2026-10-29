@@ -1,4 +1,4 @@
-// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (גרסה 2: עיצוב חדש, הודעות מרובות, Bluetooth לפי מכשיר, עדכונים)
+// נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 21:00 (גרסה 2) | 2026-10-29 21:05 (לחיצה על מספר הגרסה בודקת עדכונים)
 package il.yoel.nehiga
 
 import android.Manifest
@@ -79,7 +79,10 @@ class MainActivity : AppCompatActivity() {
         rowCheck = findViewById(R.id.rowCheck)
         switchGroups = findViewById(R.id.switchGroups)
 
-        findViewById<TextView>(R.id.txtVersion).text = "גרסה ${BuildConfig.VERSION_NAME}"
+        findViewById<TextView>(R.id.txtVersion).apply {
+            text = "גרסה ${BuildConfig.VERSION_NAME} · לחץ לבדיקת עדכונים"
+            setOnClickListener { checkUpdates(manual = true) }
+        }
 
         btnToggle.setOnClickListener {
             val turnOn = !Prefs.isActive(this)
