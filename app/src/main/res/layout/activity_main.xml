@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35 (כפתור יומן) -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🚗 בוט נהיגה"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <!-- מתג ראשי -->
+        <Switch
+            android:id="@+id/switchActive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingVertical="12dp"
+            android:text="מצב נהיגה"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="📋 יומן פעולות" />
+
+        <!-- הרשאות -->
+        <TextView
+            style="@style/SectionTitle"
+            android:text="הרשאות" />
+
+        <TextView
+            android:id="@+id/txtAccess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnAccess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="תן גישה להתראות" />
+
+        <Button
+            android:id="@+id/btnAppInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="המתג אפור? פתח פרטי אפליקציה" />
+
+        <Button
+            android:id="@+id/btnBattery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="אל תגביל סוללה לבוט" />
+
+        <!-- ההודעה -->
+        <TextView
+            style="@style/SectionTitle"
+            android:text="ההודעה שתישלח" />
+
+        <EditText
+            android:id="@+id/editMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="3"
+            android:textDirection="rtl" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="שמור הודעה" />
+
+        <Switch
+            android:id="@+id/switchGroups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="8dp"
+            android:text="לענות גם בקבוצות" />
+
+        <!-- הרכב -->
+        <TextView
+            style="@style/SectionTitle"
+            android:text="הפעלה אוטומטית ברכב" />
+
+        <TextView
+            android:id="@+id/txtCar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnCar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="בחר את ה-Bluetooth של הרכב" />
+
+        <Button
+            android:id="@+id/btnCarClear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="בטל הפעלה אוטומטית" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:alpha="0.7"
+            android:text="עצירה ארוכה כשהרכב עדיין מחובר? כבה ידנית (מתג, ווילון או ההתראה). המצב יישאר כבוי עד החיבור הבא לרכב."
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:alpha="0.7"
+            android:text="טיפ: הוסף את הכפתור &quot;מצב נהיגה&quot; לווילון ההתראות — משוך את הווילון למטה, לחץ על העיפרון / ⊕ וגרור אותו פנימה."
+            android:textSize="13sp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- נכתב: 2026-10-29 02:10 | עודכן: 2026-10-29 02:35 (מסך יומן) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- זיהוי הרכב לפי Bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- התראה קבועה "מצב נהיגה פעיל" -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- כדי שסמסונג לא "ירדים" את הבוט -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault.DayNight">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".LogActivity"
+            android:exported="false"
+            android:label="יומן פעולות" />
+
+        <!-- הלב של הבוט: קורא התראות ווטסאפ ועונה מתוכן -->
+        <service
+            android:name=".ReplyListenerService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- כפתור בווילון ההתראות -->
+        <service
+            android:name=".DrivingTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_car"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <!-- הפעלה/כיבוי אוטומטי כשהטלפון מתחבר/מתנתק מהרכב -->
+        <receiver
+            android:name=".BluetoothReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- כפתור "כבה" בהתראה הקבועה -->
+        <receiver
+            android:name=".StopReceiver"
+            android:exported="false" />
+    </application>
+</manifest>
